@@ -91,7 +91,9 @@ function viewUser(who){
           <input type="text" value="${data.user[0].last_name}" name="last_name" id="last_name">
         </div>
         <input type="submit" value="Submit">
+        <button onclick="deleteUser('${data.user[0]._id}');">Delete</button>
       </form>
+
     `;
 
     var editUser = document.getElementById('editUser');
@@ -126,6 +128,26 @@ function viewUser(who){
     });
   }
 
+}
+
+function deleteUser(who){
+
+  if (window.confirm("Are you sure you want to delete this user?")){
+    var url = 'http://localhost:3000/api/users/delete/' + who;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url);
+    xhr.send();
+
+    xhr.onload = function(){
+
+      var app = document.getElementById('app');
+
+
+      let data = JSON.parse(xhr.response);    
+  }
+
+  }
 }
 
 function createUser(){
@@ -186,6 +208,50 @@ function createUser(){
     }
   });
 }
+
+/*function deleteUser(){
+
+  var app = document.getElementById('app');
+
+  app.innerHTML = `<h2>Delete a User</h2>
+    <form id="deleteUser" action="/api/users/delete" method="post">
+      <div>
+        <label for="username">Username</label>
+        <input type="text" name="username" id="username">
+      </div>
+      <input type="submit" value="Submit">
+    </form>
+  `;
+
+  var deleteUser = document.getElementById('deleteUser');
+  createUser.addEventListener('submit', function(e){
+    e.preventDefault();
+
+    formData = new FormData(createUser);
+    var url = 'http://localhost:3000/api/users/create';
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', url);
+
+    //Be sure to add a ajson header to form, otherwise body parser will freak out
+    xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+
+    //Convert formData to JSON
+    var object = {};
+    formData.forEach(function(value, key){
+        object[key] = value;
+    });
+
+    xhr.send(JSON.stringify(object));
+    xhr.onload = function(){
+      let data = JSON.parse(xhr.response);
+
+      if(data.success == true){
+        viewIndex();
+      }
+    }
+  });
+} */
 
 //Onload view index
 viewIndex();
